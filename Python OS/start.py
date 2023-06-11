@@ -10,18 +10,11 @@ import time as t
 def start():
     start_window = Tk()
 
-    system_ico_close = ImageTk.PhotoImage(Image.open('system/image/click_to_run.png'))
-
     start_window.attributes('-fullscreen', True)
     start_window.attributes('-topmost', True)
     start_window.config(bg='white')
 
-    playsound(os.getcwd() + '/start.wav')
-
-    click_to_open = Label(start_window, image=system_ico_close
-                          , font=('Minecraft AE', 190))
-    click_to_open.place(x=start_window.winfo_screenwidth() / 2
-                        , y=start_window.winfo_screenheight() / 2, anchor='center')
+    # playsound(os.getcwd() + '/start.wav')
 
     def testing():
         global action_listbox, progress
@@ -94,6 +87,6 @@ def start():
         start_window.update()
         testing()
 
-    start_window.bind('<Button-1>', click_screen)
+    click_screen()
 
     start_window.mainloop()
