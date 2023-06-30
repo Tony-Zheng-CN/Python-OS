@@ -40,7 +40,7 @@ def start():
             else:
                 exit('性能测试 - 失败')
 
-        main_files_need = ['username', 'main.py', 'password',
+        main_files_need = ['username.js', 'main.py', 'password.js',
                            'start.wav',
                            'system/image/open.png',
                            'system/image/close.png',
@@ -58,7 +58,7 @@ def start():
                 action_listbox.insert(END, '主要运行文件存在 - ' + main_files_need[x])
                 progress['value'] = progress['value'] + 500 / len(main_files_need) * (x + 1)
             except FileNotFoundError:
-                exit('主要运行文件丢失 - ' + main_files_need[x])
+                exit('FileLoseError - ' + main_files_need[x] + "\nError 003")
         start_window.destroy()
         from main import main
         main()
@@ -66,7 +66,6 @@ def start():
     # noinspection PyUnusedLocal
     def click_screen(event):
         global action_listbox, progress
-        click_to_open.destroy()
         progress_text = Label(start_window, text='开机进度:'
                               , font=('Minecraft AE', 30))
         progress_text.place(x=0, y=start_window.winfo_screenheight() / 2, anchor='sw')
@@ -87,6 +86,6 @@ def start():
         start_window.update()
         testing()
 
-    click_screen()
+    click_screen(1)
 
     start_window.mainloop()
