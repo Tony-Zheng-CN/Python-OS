@@ -4,10 +4,13 @@ from main import *
 from register import *
 from start import start
 
-usernames = open("./username.js", "r").read().splitlines()
-passwords = open("./password.js", "r").read().splitlines()
-if not len(usernames) == len(passwords):
-    exit("UserInfoError\nError 001")
+try:
+    usernames = open("./username", "r").read().splitlines()
+    passwords = open("./password", "r").read().splitlines()
+    if not len(usernames) == len(passwords):
+        exit("UserInfoError\nError 001")
+except FileNotFoundError:
+    reg()
 
 login = Tk()
 

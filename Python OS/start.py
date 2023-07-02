@@ -40,7 +40,7 @@ def start():
             else:
                 exit('性能测试 - 失败')
 
-        main_files_need = ['username.js', 'main.py', 'password.js',
+        main_files_need = ['username', 'main.py', 'password',
                            'start.wav',
                            'system/image/open.png',
                            'system/image/close.png',

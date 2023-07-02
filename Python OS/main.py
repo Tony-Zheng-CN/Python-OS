@@ -23,17 +23,25 @@ from set import setting
 try:
     disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
 except FileNotFoundError:
-    disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
+    disk_A = zf.ZipFile(file="./disks/A.zip", mode="w")
     disk_A.close()
     disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
+try:
+    os.mkdir("./scratch file/disk/A/")
+except FileExistsError:
+    pass
 disk_A.extractall(path="./scratch file/disk/A")
 disk_A.close()
 try:
     disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
 except FileNotFoundError:
-    disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
+    disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="w")
     disk_uo.close()
     disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
+try:
+    os.mkdir("./scratch file/disk/disk_uo/")
+except FileExistsError:
+    pass
 disk_uo.extractall(path="./scratch file/disk/UserOption")
 disk_uo.close()
 
@@ -43,16 +51,16 @@ def shutdown():
     file_list_shut = os.listdir("./scratch file/disk/A/")
     for x in range(0, len(file_list_shut)):
         disk_A.write("./scratch file/disk/A/" + file_list_shut[x], file_list_shut[x])
+    disk_A.close()
     disk_uo = zf.ZipFile(file=os.getcwd() + "\\disks\\UserOption.zip", mode="w")
     file_list_shut = os.listdir("./scratch file/disk/UserOption/")
     for x in range(0, len(file_list_shut)):
         disk_uo.write("./scratch file/disk/UserOption/" + file_list_shut[x], file_list_shut[x])
-    shutil.rmtree(os.getcwd() + "/scratch file/")
+    disk_uo.close()
     exit()
 
 
 def shutdown_unsave():
-    shutil.rmtree(os.getcwd() + "/scratch file/")
     exit()
 
 
@@ -61,16 +69,17 @@ def restart():
     file_list_shut = os.listdir("./scratch file/disk/A/")
     for x in range(0, len(file_list_shut)):
         disk_A.write("./scratch file/disk/A/" + file_list_shut[x], file_list_shut[x])
+    disk_A.close()
     disk_uo = zf.ZipFile(file=os.getcwd() + "\\disks\\UserOption.zip", mode="w")
     file_list_shut = os.listdir("./scratch file/disk/UserOption/")
     for x in range(0, len(file_list_shut)):
         disk_uo.write("./scratch file/disk/UserOption/" + file_list_shut[x], file_list_shut[x])
-    shutil.rmtree(os.getcwd() + "/scratch file/")
+    disk_uo.close()
     main_window.destroy()
     try:
         disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
     except FileNotFoundError:
-        disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
+        disk_A = zf.ZipFile(file="./disks/A.zip", mode="w")
         disk_A.close()
         disk_A = zf.ZipFile(file="./disks/A.zip", mode="r")
     disk_A.extractall(path="./scratch file/disk/A")
@@ -78,7 +87,7 @@ def restart():
     try:
         disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
     except FileNotFoundError:
-        disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
+        disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="w")
         disk_uo.close()
         disk_uo = zf.ZipFile(file="./disks/UserOption.zip", mode="r")
     disk_uo.extractall(path="./scratch file/disk/UserOption")
@@ -105,7 +114,18 @@ def ico_click():
 
 
 def main():
-    options = open("./scratch file/disk/UserOption/show.js", "r").read().splitlines()
+    try:
+        options_file = open("./scratch file/disk/UserOption/show", "r")
+        options = options_file.read().splitlines()
+        options_file.close()
+    except FileNotFoundError:
+        options_file = open("./scratch file/disk/UserOption/show", "w")
+        options_file.write("#000000\nshow:color(background)\n#353535"
+                           "\nshow:color(menu)\n#ffffff\nshow:color(text)")
+        options_file.close()
+        options_file = open("./scratch file/disk/UserOption/show", "r")
+        options = options_file.read().splitlines()
+        options_file.close()
     global show_dl_bg, show_dl_menu, show_dl_fg
     show_dl_bg = options[0]
     show_dl_menu = options[2]
