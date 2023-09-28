@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+
+import pyautogui
 from playsound import *
 from PIL import Image
 from PIL import ImageTk
@@ -8,9 +10,7 @@ from pyautogui import *
 from math import *
 import sys
 import zipfile as zf
-import win32gui
 import os
-import shutil
 
 sys.path.append('system/software/moss/script')
 sys.path.append('system/software/explorer/script')
@@ -22,32 +22,51 @@ from set import setting
 
 
 def running_win_set():
-    global main_window, show_dl_menu, show_dl_fg, running_window
-
+    global options
     running_window = Tk()
 
-    def running_window_show(event):
-        running_window.geometry("+20+" + str(
-            int(main_window.winfo_screenheight() / 3) - 25))
-
-    def running_window_hide(event):
-        running_window.geometry("+-70+" + str(
-            int(main_window.winfo_screenheight() / 3) - 25))
+    global running_dragging
+    running_dragging = False
 
     running_window.attributes("-topmost", True)
     running_window.overrideredirect(True)
-    running_window.geometry(str(int(main_window.winfo_screenwidth() / 20)) + "x" + str(
-        int(main_window.winfo_screenheight() / 3)) + "+20+" + str(int(main_window.winfo_screenheight() / 3) - 25))
-    running_window.config(bg=show_dl_menu)
+    if options[6] == "vertical":
+        running_window.geometry(str(int(main_window.winfo_screenwidth() / 20)) + "x" + str(
+            int(main_window.winfo_screenheight() / 3)) + "+20+" + str(int(main_window.winfo_screenheight() / 3) - 25))
+        running_window.config(bg=show_dl_menu)
 
-    running_text = Label(running_window, text="正在运行", bg=show_dl_menu, font=("Minecraft AE", 13), fg=show_dl_fg)
-    running_text.place(x=0, y=0)
-    running_bg = Canvas(running_window, bg=show_dl_menu, width=int(main_window.winfo_screenwidth() / 21.6),
-                        height=main_window.winfo_screenheight() / 3, bd=0.01)
-    running_bg.place(x=0, y=25)
+        running_text = Label(running_window, text="正在运行", bg=show_dl_menu, font=("Minecraft AE", 13), fg=show_dl_fg)
+        running_text.place(x=0, y=0)
+        running_bg = Canvas(running_window, bg=show_dl_menu, width=int(main_window.winfo_screenwidth() / 21.6),
+                            height=main_window.winfo_screenheight() / 3, bd=0.01)
+        running_bg.place(x=0, y=25)
+    elif options[6] == "abscissa":
+        running_window.geometry(str(int(main_window.winfo_screenheight() / 3)) + "x" +
+                                str(int(main_window.winfo_screenwidth() / 20))
+                                + "+20+" + str(int(main_window.winfo_screenheight() / 3) - 25))
+        running_window.config(bg=show_dl_menu)
 
-    main_window.bind_all("<Double-F12>", running_window_show)
-    main_window.bind_all("<F12>", running_window_hide)
+        running_text = Label(running_window, text="正在\n运行", bg=show_dl_menu, font=("Minecraft AE", 13), fg=show_dl_fg)
+        running_text.place(x=0, y=0)
+        running_bg = Canvas(running_window, bg=show_dl_menu, width=main_window.winfo_screenheight() / 3,
+                            height=int(main_window.winfo_screenwidth() / 21.6), bd=0.01)
+        running_bg.place(x=0, y=25)
+
+    def running_on_start(event):
+        global running_dragging
+        running_dragging = True
+
+    def running_on_drag(event):
+        if running_dragging:
+            x, y = pyautogui.position()
+            running_window.geometry("+" + str(x) + "+" + str(y))
+
+    def running_on_release(event):
+        global running_dragging
+        running_dragging = False
+
+    running_window.bind("<B1-Motion>", running_on_drag)
+    running_window.bind("<ButtonRelease-1>", running_on_release)
 
     running_window.mainloop()
 
@@ -148,19 +167,19 @@ def ico_click():
 
 def main():
     unzip_disks()
+    global show_dl_bg, show_dl_menu, show_dl_fg, options
     try:
-        options_file = open("./scratch file/disk/UserOption/show", "r")
+        options_file = open("./scratch file/disk/UserOption/show.txt", "r")
         options = options_file.read().splitlines()
         options_file.close()
     except FileNotFoundError:
-        options_file = open("./scratch file/disk/UserOption/show", "w")
+        options_file = open("./scratch file/disk/UserOption/.txt", "w")
         options_file.write("#000000\nshow:color(background)\n#353535"
-                           "\nshow:color(menu)\n#ffffff\nshow:color(text)")
+                           "\nshow:color(menu)\n#ffffff\nshow:color(text)\nvertical\nsys:running_bar")
         options_file.close()
-        options_file = open("./scratch file/disk/UserOption/show", "r")
+        options_file = open("./scratch file/disk/UserOption/show.txt", "r")
         options = options_file.read().splitlines()
         options_file.close()
-    global show_dl_bg, show_dl_menu, show_dl_fg
     show_dl_bg = options[0]
     show_dl_menu = options[2]
     show_dl_fg = options[4]
@@ -201,6 +220,6 @@ def main():
     app_text = Label(main_window, text="软\n件", bg=show_dl_menu, font=("Minecraft AE", 9), fg=show_dl_fg)
     app_text.place(x=int(main_window.winfo_screenwidth() / 4) + 20 + 45 + 45 + 45, y=0)
 
-    running_win_set()
+    # running_win_set()
 
     main_window.mainloop()

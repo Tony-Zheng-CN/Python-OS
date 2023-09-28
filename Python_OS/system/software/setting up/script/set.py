@@ -2,6 +2,7 @@ import random as r
 import time as t
 import sys
 from tkinter import *
+from tkinter import ttk
 import os
 from tkinter import colorchooser
 from PIL import Image
@@ -9,7 +10,7 @@ from PIL import ImageTk
 
 
 def setting():
-    options = open(os.getcwd() + "/scratch file/disk/UserOption/show", "r").read().splitlines()
+    options = open(os.getcwd() + "/scratch file/disk/UserOption/show.txt", "r").read().splitlines()
     global set_frame
     show_dl_bg = options[0]
     show_dl_menu = options[2]
@@ -47,53 +48,39 @@ def setting():
                                  , fg=show_dl_fg)
         set_show_lf.pack()
 
-        def show_dl_changebg():
-            global show_dl_nbg
-            show_dl_nbg = colorchooser.askcolor(title="选择背景颜色")[1]
-
-        def show_dl_changemenu():
-            global show_dl_nmenu
-            show_dl_nmenu = colorchooser.askcolor(title="选择控件颜色")[1]
-
-        def show_dl_changefg():
-            global show_dl_nfg
-            show_dl_nfg = colorchooser.askcolor(title="选择文字颜色")[1]
-
         def show_dl_change():
-            global show_dl_nfg, show_dl_nbg, show_dl_nmenu
             show_dl_write_thing = ""
             for x in range(0, len(options)):
-                global show_dl_nfg, show_dl_nbg, show_dl_nmenu
                 if x == 0:
                     # show_dl_write_thing = show_dl_write_thing + show_dl_entry1.get() + "\n"
-                    show_dl_write_thing = show_dl_write_thing + show_dl_nbg + "\n"
+                    show_dl_write_thing = show_dl_write_thing + show_dl_cb1.get() + "\n"
                 elif x == 2:
                     # show_dl_write_thing = show_dl_write_thing + show_dl_entry2.get() + "\n"
-                    show_dl_write_thing = show_dl_write_thing + show_dl_nmenu + "\n"
+                    show_dl_write_thing = show_dl_write_thing + show_dl_cb2.get() + "\n"
                 elif x == 4:
                     # show_dl_write_thing = show_dl_write_thing + show_dl_entry3.get() + "\n"
-                    show_dl_write_thing = show_dl_write_thing + show_dl_nfg + "\n"
+                    show_dl_write_thing = show_dl_write_thing + show_dl_cb3.get() + "\n"
                 else:
                     show_dl_write_thing = show_dl_write_thing + options[x] + "\n"
-                write_options = open(os.getcwd() + "/scratch file/disk/UserOption/show.js", "w")
+                write_options = open(os.getcwd() + "/scratch file/disk/UserOption/show.txt", "w")
                 write_options.write(show_dl_write_thing)
                 write_options.close()
 
         # show_dl_entry1 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         # show_dl_entry1.grid(row=1, column=0)
-        show_dl_cb1 = Button(set_show_lf, bg=show_dl_menu, fg=show_dl_fg, command=show_dl_changebg)
+        show_dl_cb1 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         show_dl_cb1.grid(row=1, column=0)
         show_dl_l1 = Label(set_show_lf, text="背景", fg=show_dl_fg, bg=show_dl_menu)
         show_dl_l1.grid(row=0, column=0)
         # show_dl_entry2 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         # show_dl_entry2.grid(row=1, column=1)
-        show_dl_cb2 = Button(set_show_lf, bg=show_dl_menu, fg=show_dl_fg, command=show_dl_changemenu)
+        show_dl_cb2 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         show_dl_cb2.grid(row=1, column=1)
         show_dl_l2 = Label(set_show_lf, text="控件", fg=show_dl_fg, bg=show_dl_menu)
         show_dl_l2.grid(row=0, column=1)
         # show_dl_entry3 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         # show_dl_entry3.grid(row=1, column=2)
-        show_dl_cb3 = Button(set_show_lf, bg=show_dl_menu, fg=show_dl_fg, command=show_dl_changefg)
+        show_dl_cb3 = Entry(set_show_lf, bg=show_dl_menu, fg=show_dl_fg)
         show_dl_cb3.grid(row=1, column=2)
         show_dl_l3 = Label(set_show_lf, text="文字", fg=show_dl_fg, bg=show_dl_menu)
         show_dl_l3.grid(row=0, column=2)
@@ -108,34 +95,64 @@ def setting():
         set_frame = Frame(set_win, bg=show_dl_bg)
         set_frame.place(x=433, y=0)
 
-        administrator_ico_png = ImageTk.PhotoImage(Image.open(os.getcwd() + "/system/image/administrator.png"),
-                                                   master=set_win)
-
         def set_userinfo():
             set_userinfo_win = Tk()
 
             set_userinfo_win.geometry(
                 "300x500+" + str(int(set_userinfo_win.winfo_screenheight() / 2) - 300) + "+" + str(
                     int(set_userinfo_win.winfo_screenwidth() / 2) - 500))
-            set_userinfo_win.title("设置用户名、密码及权限")
+            set_userinfo_win.title("增加用户名、密码")
             set_userinfo_win.config(bg=show_dl_bg)
 
             set_new_name_label = Label(set_userinfo_win, text="新的用户名:", bg=show_dl_bg, fg=show_dl_fg)
             set_new_name_entry = Entry(set_userinfo_win, bg=show_dl_bg, fg=show_dl_fg)
-            set_new_name_label = Label(set_userinfo_win, text="新的用户名:", bg=show_dl_bg, fg=show_dl_fg)
-            set_new_name_entry = Entry(set_userinfo_win, bg=show_dl_bg, fg=show_dl_fg)
+            set_new_pass_label = Label(set_userinfo_win, text="新的密码:", bg=show_dl_bg, fg=show_dl_fg)
+            set_new_pass_entry = Entry(set_userinfo_win, bg=show_dl_bg, fg=show_dl_fg)
+            set_new_name_label.pack()
+            set_new_name_entry.pack()
+            set_new_pass_label.pack()
+            set_new_pass_entry.pack()
 
             set_userinfo_win.mainloop()
 
-        set_userinfo_button = Button(set_frame, text="1.设置用户名、密码及权限",
+        set_userinfo_button = Button(set_frame, text="1.设置用户名、密码",
                                      command=set_userinfo, bg=show_dl_bg, fg=show_dl_fg)
         set_userinfo_button.pack()
 
     def setting_sys():
+        def set_bar():
+            def write_bar(bar_setting):
+                sys_bar_write_thing = ""
+                for x in range(0, len(options)):
+                    if x == 6:
+                        # show_dl_write_thing = show_dl_write_thing + show_dl_entry1.get() + "\n"
+                        sys_bar_write_thing = sys_bar_write_thing + bar_setting + "\n"
+                    else:
+                        sys_bar_write_thing = sys_bar_write_thing + options[x] + "\n"
+                    write_options = open(os.getcwd() + "/scratch file/disk/UserOption/show.txt", "w")
+                    write_options.write(sys_bar_write_thing)
+                    write_options.close()
+
+            global bar_setting
+            if set_sys_bar_choose.get() == "横向":
+                write_bar("abscissa")
+            elif set_sys_bar_choose.get() == "纵向":
+                write_bar("vertical")
+
         global set_frame
         set_frame.destroy()
         set_frame = Frame(set_win, bg=show_dl_bg)
         set_frame.place(x=433, y=0)
+        set_sys_bf = LabelFrame(set_frame, text="1.设置任务栏样式", bg=show_dl_menu
+                                , fg=show_dl_fg)
+        set_sys_bar_choose = ttk.Combobox(set_sys_bf,
+                                          background=show_dl_bg)
+        set_sys_bar_choose["value"] = ["横向", "纵向"]
+        set_sys_bar_choose.pack()
+        set_sys_bar_button = Button(set_sys_bf, text="确认",
+                                    background=show_dl_bg, fg=show_dl_fg, command=set_bar)
+        set_sys_bar_button.pack()
+        set_sys_bf.pack()
 
     def setting_about():
         global set_frame

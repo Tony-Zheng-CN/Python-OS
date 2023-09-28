@@ -4,3 +4,5 @@ show:color(background)
 show:color(menu)
 #ffffff
 show:color(text)
+vertical
+sys:running_bar

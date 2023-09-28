@@ -1,6 +1,8 @@
-#000000
+#FFFFFF
 show:color(background)
-#353535
+#AAAAAA
 show:color(menu)
-#ffffff
+#000000
 show:color(text)
+vertical
+sys:running_bar

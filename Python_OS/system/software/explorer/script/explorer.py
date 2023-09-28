@@ -6,7 +6,7 @@ from tkinter import *
 
 
 def explorer():
-    options = open(os.getcwd() + "/scratch file/disk/UserOption/show", "r").read().splitlines()
+    options = open(os.getcwd() + "/scratch file/disk/UserOption/show.txt", "r").read().splitlines()
     show_dl_bg = options[0]
     show_dl_menu = options[2]
     show_dl_fg = options[4]

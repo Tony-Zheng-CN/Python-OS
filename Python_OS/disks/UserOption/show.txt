@@ -2,5 +2,7 @@
 show:color(background)
 #353535
 show:color(menu)
-#ffffff
+#FFFFFF
 show:color(text)
+vertical
+sys:running_bar
